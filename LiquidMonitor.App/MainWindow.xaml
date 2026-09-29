@@ -1,0 +1,277 @@
+﻿<Window
+    x:Class="LiquidMonitor.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid
+        x:Name="Root"
+        Background="Transparent"
+        RightTapped="Root_RightTapped"
+        DoubleTapped="Root_DoubleTapped"
+        PointerPressed="Root_PointerPressed"
+        PointerMoved="Root_PointerMoved"
+        PointerReleased="Root_PointerReleased">
+        <Grid.Resources>
+
+    
+            <!-- Type scale -->
+            <FontFamily x:Key="DisplayFont">Segoe UI Variable Display, Segoe UI</FontFamily>
+            <FontFamily x:Key="TextFont">Segoe UI Variable Text, Segoe UI</FontFamily>
+    
+            <SolidColorBrush x:Key="LabelBrush" Color="#7A8798"/>
+            <SolidColorBrush x:Key="DownBrush" Color="#5FD3F5"/>
+            <SolidColorBrush x:Key="UpBrush" Color="#C08CFF"/>
+            <SolidColorBrush x:Key="MemBrush" Color="#FFD479"/>
+            <SolidColorBrush x:Key="MutedBrush" Color="#9AA6B4"/>
+            <SolidColorBrush x:Key="TrackBrush" Color="#26FFFFFF"/>
+
+            <Style x:Key="SectionLabel" TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{StaticResource TextFont}"/>
+                <Setter Property="FontSize" Value="10"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Foreground" Value="{StaticResource LabelBrush}"/>
+            </Style>
+    
+            <Style x:Key="MetricValue" TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{StaticResource DisplayFont}"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="FontSize" Value="23"/>
+            </Style>
+    
+            <Style x:Key="StatValue" TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{StaticResource DisplayFont}"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="FontSize" Value="19"/>
+            </Style>
+    
+            <Style x:Key="UsageTrack" TargetType="Border">
+                <Setter Property="Height" Value="6"/>
+                <Setter Property="Background" Value="{StaticResource TrackBrush}"/>
+                <Setter Property="CornerRadius" Value="3"/>
+            </Style>
+    
+        </Grid.Resources>
+
+
+        <!-- COMPACT SPEED PILL -->
+
+        <Border
+            x:Name="CompactCard"
+            Background="Transparent"
+            BorderThickness="0"
+            CornerRadius="24"
+            Padding="0">
+
+            <Grid>
+
+                <!-- Real desktop capture, blurred. This is what actually makes
+                     the glass see through; see RefreshBackdrop. Sits under all
+                     content and is never hit tested. Hidden for flat themes. -->
+
+                <Border
+                    x:Name="CompactBackdropHost"
+                    CornerRadius="24"
+                    IsHitTestVisible="False">
+                    <Image
+                        x:Name="CompactBackdropImage"
+                        Stretch="Fill"/>
+                </Border>
+
+                <StackPanel
+                    x:Name="CompactContent"
+                    Margin="14,15"
+                    Orientation="Horizontal"
+                    Spacing="14"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+
+                    <TextBlock
+                        x:Name="CompactDownloadText"
+                        Text="↓ 0.0 KB/s"
+                        FontFamily="{StaticResource DisplayFont}"
+                        FontSize="13"
+                        FontWeight="SemiBold"
+                        Foreground="{StaticResource DownBrush}" TextTrimming="CharacterEllipsis"
+                        VerticalAlignment="Center"/>
+
+                    <TextBlock
+                        x:Name="CompactUploadText"
+                        Text="↑ 0.0 KB/s"
+                        FontFamily="{StaticResource DisplayFont}"
+                        FontSize="13"
+                        FontWeight="SemiBold"
+                        Foreground="{StaticResource UpBrush}" TextTrimming="CharacterEllipsis"
+                        VerticalAlignment="Center"/>
+
+                </StackPanel>
+
+                <!-- Liquid glass pass: specular lighting, a bright inner rim,
+                     and a faint chromatic fringe. Drawn above the body and
+                     never hit tested. Collapsed for the flat themes. -->
+                <Grid
+                    x:Name="CompactGlass"
+                    IsHitTestVisible="False">
+
+                    <Border
+                        x:Name="CompactLighting"
+                        CornerRadius="24"/>
+
+                    <Border
+                        x:Name="CompactRim"
+                        CornerRadius="24"
+                        BorderThickness="1"/>
+
+                    <Border
+                        x:Name="CompactFringe"
+                        CornerRadius="24"
+                        BorderThickness="1"/>
+
+                </Grid>
+
+            </Grid>
+
+        </Border>
+
+
+        <!-- EXPANDED DASHBOARD -->
+
+        <Border
+            x:Name="ExpandedCard"
+            Visibility="Collapsed"
+            Background="Transparent"
+            BorderThickness="0"
+            CornerRadius="0"
+            Padding="0">
+
+            <Grid>
+
+            <!-- Same captured desktop as the compact pill, so the two stay
+                 visually continuous when the card expands. -->
+
+            <Border
+                x:Name="ExpandedBackdropHost"
+                CornerRadius="8"
+                IsHitTestVisible="False">
+                <Image
+                    x:Name="ExpandedBackdropImage"
+                    Stretch="Fill"/>
+            </Border>
+
+            <Grid Margin="26,22">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- SPEED -->
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel HorizontalAlignment="Left" Margin="0,0,16,0">
+                        <TextBlock Text="DOWNLOAD" Style="{StaticResource SectionLabel}"/>
+                        <TextBlock x:Name="DownloadText" Text="↓ 0.0 KB/s" Style="{StaticResource MetricValue}" Foreground="{StaticResource DownBrush}" TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
+
+                    <Rectangle Grid.Column="1" Width="1" Margin="0,4,16,4" Fill="#1FFFFFFF"/>
+
+                    <StackPanel Grid.Column="2" HorizontalAlignment="Left">
+                        <TextBlock Text="UPLOAD" Style="{StaticResource SectionLabel}"/>
+                        <TextBlock x:Name="UploadText" Text="↑ 0.0 KB/s" Style="{StaticResource MetricValue}" Foreground="{StaticResource UpBrush}" TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
+
+                </Grid>
+
+                <!-- CONNECTION -->
+
+                <!-- Adapter names are long ("Intel(R) Wi-Fi 6 AX201 160MHz"),
+                     so give the ping a fixed slot and let the name take the
+                     rest, ellipsising rather than overflowing. -->
+                <Grid Grid.Row="1" Margin="0,16,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock x:Name="PingText" Text="Ping --" FontFamily="{StaticResource TextFont}" FontSize="12" Foreground="{StaticResource MutedBrush}"/>
+
+                    <TextBlock x:Name="AdapterText"
+                               Grid.Column="1"
+                               Margin="20,0,0,0"
+                               Text="--"
+                               FontFamily="{StaticResource TextFont}"
+                               FontSize="12"
+                               Foreground="{StaticResource MutedBrush}"
+                               TextTrimming="CharacterEllipsis"/>
+                </Grid>
+
+                <!-- SYSTEM -->
+
+                <Grid Grid.Row="2" Margin="0,20,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="CPU" Style="{StaticResource SectionLabel}"/>
+                        <TextBlock x:Name="CpuUsageText" Text="--%" Style="{StaticResource StatValue}" Foreground="{StaticResource DownBrush}"/>
+                        <Grid Height="6" Margin="0,9,0,0">
+                            <Border Style="{StaticResource UsageTrack}"/>
+                            <Border x:Name="CpuUsageBar" Height="6" CornerRadius="3" HorizontalAlignment="Left" Width="0" Background="#5FD3F5"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Margin="0,0,14,0">
+                        <TextBlock Text="GPU" Style="{StaticResource SectionLabel}"/>
+                        <TextBlock x:Name="GpuUsageText" Text="--%" Style="{StaticResource StatValue}" Foreground="{StaticResource UpBrush}"/>
+                        <Grid Height="6" Margin="0,9,0,0">
+                            <Border Style="{StaticResource UsageTrack}"/>
+                            <Border x:Name="GpuUsageBar" Height="6" CornerRadius="3" HorizontalAlignment="Left" Width="0" Background="#C08CFF"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="MEMORY" Style="{StaticResource SectionLabel}"/>
+                        <TextBlock x:Name="MemoryUsageText" Text="--%" Style="{StaticResource StatValue}" Foreground="{StaticResource MemBrush}"/>
+                        <Grid Height="6" Margin="0,9,0,0">
+                            <Border Style="{StaticResource UsageTrack}"/>
+                            <Border x:Name="MemoryUsageBar" Height="6" CornerRadius="3" HorizontalAlignment="Left" Width="0" Background="#FFD479"/>
+                        </Grid>
+                    </StackPanel>
+
+                </Grid>
+
+            </Grid>
+
+            <!-- Same glass pass as the pill. Square because the expanded
+                 window is rounded by DWM rather than by a region, so an
+                 overlay radius here would not line up with the window edge. -->
+            <Grid
+                x:Name="ExpandedGlass"
+                IsHitTestVisible="False">
+
+                <Border x:Name="ExpandedLighting"/>
+
+                <Border
+                    x:Name="ExpandedRim"
+                    BorderThickness="1"/>
+
+            </Grid>
+
+            </Grid>
+
+        </Border>
+
+    </Grid>
+
+</Window>

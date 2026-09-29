@@ -1,0 +1,25 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.10.12217.157 stable
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiquidMonitor.App", "LiquidMonitor.App\LiquidMonitor.App.csproj", "{B7A2B9C4-0F91-4E0B-A5E0-6A8D1C5D1F01}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B7A2B9C4-0F91-4E0B-A5E0-6A8D1C5D1F01}.Debug|x64.ActiveCfg = Debug|x64
+		{B7A2B9C4-0F91-4E0B-A5E0-6A8D1C5D1F01}.Debug|x64.Build.0 = Debug|x64
+		{B7A2B9C4-0F91-4E0B-A5E0-6A8D1C5D1F01}.Debug|x64.Deploy.0 = Debug|x64
+		{B7A2B9C4-0F91-4E0B-A5E0-6A8D1C5D1F01}.Release|x64.ActiveCfg = Release|x64
+		{B7A2B9C4-0F91-4E0B-A5E0-6A8D1C5D1F01}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {001C97EF-B373-4499-9113-37A2E4B09AED}
+	EndGlobalSection
+EndGlobal

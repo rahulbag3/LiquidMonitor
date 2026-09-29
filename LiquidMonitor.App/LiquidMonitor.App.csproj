@@ -1,0 +1,55 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+		<TargetPlatformMinVersion>10.0.22621.0</TargetPlatformMinVersion>
+
+		<RootNamespace>LiquidMonitor</RootNamespace>
+
+		<!-- Declares supportedOS + PerMonitorV2 DPI awareness. Without the
+		     supportedOS GUID Windows applies compatibility shims. -->
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+
+		<Platforms>x64</Platforms>
+		<PlatformTarget>x64</PlatformTarget>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+
+		<UseWinUI>true</UseWinUI>
+		<EnableMsixTooling>false</EnableMsixTooling>
+
+		<Nullable>enable</Nullable>
+
+		<!-- Important -->
+
+		<!-- The Windows App SDK only auto-enables its bootstrap when
+		     WindowsAppSDKSelfContained != true AND WindowsPackageType == None.
+		     With SelfContained=true and/or EnableMsixTooling=true both conditions
+		     fail, no bootstrap is injected, and the app dies at startup inside
+		     Microsoft.UI.Xaml.dll. Setting this explicitly injects the SDK's own
+		     auto-initializer, which is what makes the app start at all. -->
+		<WindowsAppSdkBootstrapInitialize>true</WindowsAppSdkBootstrapInitialize>
+
+		<!-- The DeploymentManager step throws "The process has no package identity"
+		     when it is auto-injected into an unpackaged (loose-file) app, which
+		     kills startup. Only the bootstrap is required here. -->
+		<WindowsAppSdkDeploymentManagerInitialize>false</WindowsAppSdkDeploymentManagerInitialize>
+
+		<!-- UndockedRegFreeWinRT is likewise unnecessary for an unpackaged app. -->
+		<WindowsAppSdkUndockedRegFreeWinRTInitialize>false</WindowsAppSdkUndockedRegFreeWinRTInitialize>
+	</PropertyGroup>
+
+
+	<ItemGroup>
+
+		<PackageReference Include="Microsoft.WindowsAppSDK"
+						  Version="2.5.1" />
+
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools"
+						  Version="10.0.26100.4654" />
+
+	</ItemGroup>
+
+
+</Project>

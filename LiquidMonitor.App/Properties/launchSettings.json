@@ -1,0 +1,7 @@
+{
+    "profiles":  {
+                     "LiquidMonitor.App (unpackaged)":  {
+                                                            "commandName":  "Project"
+                                                        }
+                 }
+}
